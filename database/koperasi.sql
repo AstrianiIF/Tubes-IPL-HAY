@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Waktu pembuatan: 18 Des 2024 pada 07.09
--- Versi server: 10.4.28-MariaDB
--- Versi PHP: 8.0.28
+-- Generation Time: Dec 18, 2024 at 11:54 AM
+-- Server version: 10.4.32-MariaDB
+-- PHP Version: 8.0.30
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -24,33 +24,37 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `dim_admin`
+-- Table structure for table `dim_admin`
 --
 
 CREATE TABLE `dim_admin` (
   `Admin_ID` int(11) NOT NULL,
   `Nama` varchar(100) DEFAULT NULL,
   `Alamat` varchar(255) DEFAULT NULL,
-  `Tanggal_Lahir` date DEFAULT NULL
+  `Tanggal_Lahir` date DEFAULT NULL,
+  `Username` varchar(18) NOT NULL,
+  `Password` varchar(18) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `dim_anggota`
+-- Table structure for table `dim_anggota`
 --
 
 CREATE TABLE `dim_anggota` (
   `Anggota_ID` int(11) NOT NULL,
   `Nama` varchar(100) DEFAULT NULL,
   `Alamat` varchar(255) DEFAULT NULL,
-  `Tanggal_Lahir` date DEFAULT NULL
+  `Tanggal_Lahir` date DEFAULT NULL,
+  `Username` varchar(18) NOT NULL,
+  `Password` varchar(18) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `dim_bayar_pinjaman`
+-- Table structure for table `dim_bayar_pinjaman`
 --
 
 CREATE TABLE `dim_bayar_pinjaman` (
@@ -63,7 +67,7 @@ CREATE TABLE `dim_bayar_pinjaman` (
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `dim_pinjam`
+-- Table structure for table `dim_pinjam`
 --
 
 CREATE TABLE `dim_pinjam` (
@@ -75,7 +79,7 @@ CREATE TABLE `dim_pinjam` (
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `dim_simpan`
+-- Table structure for table `dim_simpan`
 --
 
 CREATE TABLE `dim_simpan` (
@@ -88,7 +92,7 @@ CREATE TABLE `dim_simpan` (
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `dim_status`
+-- Table structure for table `dim_status`
 --
 
 CREATE TABLE `dim_status` (
@@ -96,67 +100,143 @@ CREATE TABLE `dim_status` (
   `Status` varchar(50) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `fact_simpanan`
+--
+
+CREATE TABLE `fact_simpanan` (
+  `Fact_Simpanan_ID` int(11) NOT NULL,
+  `Simpan_ID` int(11) DEFAULT NULL,
+  `Anggota_ID` int(11) DEFAULT NULL,
+  `Total_Simpanan` decimal(15,2) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `fact_transaksi_pinjaman`
+--
+
+CREATE TABLE `fact_transaksi_pinjaman` (
+  `Fact_Transaksi_ID` int(11) NOT NULL,
+  `Admin_ID` int(11) DEFAULT NULL,
+  `Bayar_Pinjaman_ID` int(11) DEFAULT NULL,
+  `Anggota_ID` int(11) DEFAULT NULL,
+  `Pinjam_ID` int(11) DEFAULT NULL,
+  `Status_ID` int(11) DEFAULT NULL,
+  `Sisa_Pinjaman` decimal(15,2) DEFAULT NULL,
+  `Total_Pinjaman` decimal(15,2) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
 --
 -- Indexes for dumped tables
 --
 
 --
--- Indeks untuk tabel `dim_admin`
+-- Indexes for table `dim_admin`
 --
 ALTER TABLE `dim_admin`
   ADD PRIMARY KEY (`Admin_ID`);
 
 --
--- Indeks untuk tabel `dim_anggota`
+-- Indexes for table `dim_anggota`
 --
 ALTER TABLE `dim_anggota`
   ADD PRIMARY KEY (`Anggota_ID`);
 
 --
--- Indeks untuk tabel `dim_bayar_pinjaman`
+-- Indexes for table `dim_bayar_pinjaman`
 --
 ALTER TABLE `dim_bayar_pinjaman`
   ADD PRIMARY KEY (`Bayar_Pinjaman_ID`);
 
 --
--- Indeks untuk tabel `dim_pinjam`
+-- Indexes for table `dim_pinjam`
 --
 ALTER TABLE `dim_pinjam`
   ADD PRIMARY KEY (`Pinjam_ID`);
 
 --
--- Indeks untuk tabel `dim_simpan`
+-- Indexes for table `dim_simpan`
 --
 ALTER TABLE `dim_simpan`
   ADD PRIMARY KEY (`Simpan_ID`);
 
 --
--- Indeks untuk tabel `dim_status`
+-- Indexes for table `dim_status`
 --
 ALTER TABLE `dim_status`
   ADD PRIMARY KEY (`Status_ID`);
 
 --
--- AUTO_INCREMENT untuk tabel yang dibuang
+-- Indexes for table `fact_simpanan`
+--
+ALTER TABLE `fact_simpanan`
+  ADD PRIMARY KEY (`Fact_Simpanan_ID`),
+  ADD KEY `Simpan_ID` (`Simpan_ID`),
+  ADD KEY `Anggota_ID` (`Anggota_ID`);
+
+--
+-- Indexes for table `fact_transaksi_pinjaman`
+--
+ALTER TABLE `fact_transaksi_pinjaman`
+  ADD PRIMARY KEY (`Fact_Transaksi_ID`),
+  ADD KEY `Admin_ID` (`Admin_ID`),
+  ADD KEY `Bayar_Pinjaman_ID` (`Bayar_Pinjaman_ID`),
+  ADD KEY `Anggota_ID` (`Anggota_ID`),
+  ADD KEY `Pinjam_ID` (`Pinjam_ID`),
+  ADD KEY `Status_ID` (`Status_ID`);
+
+--
+-- AUTO_INCREMENT for dumped tables
 --
 
 --
--- AUTO_INCREMENT untuk tabel `dim_admin`
+-- AUTO_INCREMENT for table `dim_admin`
 --
 ALTER TABLE `dim_admin`
   MODIFY `Admin_ID` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT untuk tabel `dim_anggota`
+-- AUTO_INCREMENT for table `dim_anggota`
 --
 ALTER TABLE `dim_anggota`
   MODIFY `Anggota_ID` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT untuk tabel `dim_status`
+-- AUTO_INCREMENT for table `dim_status`
 --
 ALTER TABLE `dim_status`
   MODIFY `Status_ID` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `fact_transaksi_pinjaman`
+--
+ALTER TABLE `fact_transaksi_pinjaman`
+  MODIFY `Fact_Transaksi_ID` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- Constraints for dumped tables
+--
+
+--
+-- Constraints for table `fact_simpanan`
+--
+ALTER TABLE `fact_simpanan`
+  ADD CONSTRAINT `fact_simpanan_ibfk_1` FOREIGN KEY (`Simpan_ID`) REFERENCES `dim_simpan` (`Simpan_ID`),
+  ADD CONSTRAINT `fact_simpanan_ibfk_2` FOREIGN KEY (`Anggota_ID`) REFERENCES `dim_anggota` (`Anggota_ID`);
+
+--
+-- Constraints for table `fact_transaksi_pinjaman`
+--
+ALTER TABLE `fact_transaksi_pinjaman`
+  ADD CONSTRAINT `fact_transaksi_pinjaman_ibfk_1` FOREIGN KEY (`Admin_ID`) REFERENCES `dim_admin` (`Admin_ID`),
+  ADD CONSTRAINT `fact_transaksi_pinjaman_ibfk_2` FOREIGN KEY (`Bayar_Pinjaman_ID`) REFERENCES `dim_bayar_pinjaman` (`Bayar_Pinjaman_ID`),
+  ADD CONSTRAINT `fact_transaksi_pinjaman_ibfk_3` FOREIGN KEY (`Anggota_ID`) REFERENCES `dim_anggota` (`Anggota_ID`),
+  ADD CONSTRAINT `fact_transaksi_pinjaman_ibfk_4` FOREIGN KEY (`Pinjam_ID`) REFERENCES `dim_pinjam` (`Pinjam_ID`),
+  ADD CONSTRAINT `fact_transaksi_pinjaman_ibfk_5` FOREIGN KEY (`Status_ID`) REFERENCES `dim_status` (`Status_ID`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
