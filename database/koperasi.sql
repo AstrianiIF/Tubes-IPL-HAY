@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 16, 2024 at 04:48 AM
--- Server version: 10.4.32-MariaDB
--- PHP Version: 8.2.12
+-- Waktu pembuatan: 18 Des 2024 pada 07.09
+-- Versi server: 10.4.28-MariaDB
+-- Versi PHP: 8.0.28
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -24,7 +24,7 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
--- Table structure for table `dim_admin`
+-- Struktur dari tabel `dim_admin`
 --
 
 CREATE TABLE `dim_admin` (
@@ -37,7 +37,7 @@ CREATE TABLE `dim_admin` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `dim_anggota`
+-- Struktur dari tabel `dim_anggota`
 --
 
 CREATE TABLE `dim_anggota` (
@@ -50,7 +50,45 @@ CREATE TABLE `dim_anggota` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `dim_status`
+-- Struktur dari tabel `dim_bayar_pinjaman`
+--
+
+CREATE TABLE `dim_bayar_pinjaman` (
+  `Bayar_Pinjaman_ID` int(11) NOT NULL,
+  `Tipe_Transaksi` varchar(50) NOT NULL,
+  `Amount` decimal(15,0) NOT NULL,
+  `Tanggal_Transaksi` date NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Struktur dari tabel `dim_pinjam`
+--
+
+CREATE TABLE `dim_pinjam` (
+  `Pinjam_ID` int(11) NOT NULL,
+  `Pinjaman_Amount` decimal(15,0) NOT NULL,
+  `Tanggal_Pinjam_ID` date NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Struktur dari tabel `dim_simpan`
+--
+
+CREATE TABLE `dim_simpan` (
+  `Simpan_ID` int(11) NOT NULL,
+  `Simpanan_Amount` decimal(15,0) NOT NULL,
+  `Tanggal_Simpan_ID` date NOT NULL,
+  `Tanggal_Tarik_Simpan_ID` date NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Struktur dari tabel `dim_status`
 --
 
 CREATE TABLE `dim_status` (
@@ -63,41 +101,59 @@ CREATE TABLE `dim_status` (
 --
 
 --
--- Indexes for table `dim_admin`
+-- Indeks untuk tabel `dim_admin`
 --
 ALTER TABLE `dim_admin`
   ADD PRIMARY KEY (`Admin_ID`);
 
 --
--- Indexes for table `dim_anggota`
+-- Indeks untuk tabel `dim_anggota`
 --
 ALTER TABLE `dim_anggota`
   ADD PRIMARY KEY (`Anggota_ID`);
 
 --
--- Indexes for table `dim_status`
+-- Indeks untuk tabel `dim_bayar_pinjaman`
+--
+ALTER TABLE `dim_bayar_pinjaman`
+  ADD PRIMARY KEY (`Bayar_Pinjaman_ID`);
+
+--
+-- Indeks untuk tabel `dim_pinjam`
+--
+ALTER TABLE `dim_pinjam`
+  ADD PRIMARY KEY (`Pinjam_ID`);
+
+--
+-- Indeks untuk tabel `dim_simpan`
+--
+ALTER TABLE `dim_simpan`
+  ADD PRIMARY KEY (`Simpan_ID`);
+
+--
+-- Indeks untuk tabel `dim_status`
 --
 ALTER TABLE `dim_status`
   ADD PRIMARY KEY (`Status_ID`);
 
 --
--- AUTO_INCREMENT for dumped tables
+-- AUTO_INCREMENT untuk tabel yang dibuang
 --
 
 --
--- AUTO_INCREMENT for table `dim_admin`
+-- AUTO_INCREMENT untuk tabel `dim_admin`
 --
 ALTER TABLE `dim_admin`
   MODIFY `Admin_ID` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `dim_anggota`
+-- AUTO_INCREMENT untuk tabel `dim_anggota`
 --
 ALTER TABLE `dim_anggota`
   MODIFY `Anggota_ID` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `dim_status`
+-- AUTO_INCREMENT untuk tabel `dim_status`
 --
 ALTER TABLE `dim_status`
   MODIFY `Status_ID` int(11) NOT NULL AUTO_INCREMENT;
