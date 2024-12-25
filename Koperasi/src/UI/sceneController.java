@@ -38,6 +38,11 @@ public class sceneController { // Ganti nama kelas dengan kapitalisasi yang bena
     public void sceneTransfer(ActionEvent event) throws IOException {
     	loadScene(event, "Transfer.fxml");
     }
+    
+    // Metode untuk mengubah scene ke DetailTransaksi.fxml
+    public void sceneDetailTransaksi(ActionEvent event) throws IOException {
+    	loadScene(event,"DetailTransaksi.fxml");
+    }
 
     // Metode untuk memuat dan mengubah scene (aku ubah dikit biar manggilnya gampang)
     private void loadScene(ActionEvent event, String fxmlFile) throws IOException {
