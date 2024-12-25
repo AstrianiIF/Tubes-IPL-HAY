@@ -37,4 +37,6 @@
       </Label>
       <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#e1e1e1" height="89.0" layoutX="66.0" layoutY="291.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" style="-fx-arc-height: 70; -fx-arc-width: 70;" width="546.0" />
    </children>
+   
 </AnchorPane>
+
