@@ -40,7 +40,7 @@
             </ImageView>
          </graphic>
       </Button>
-      <Button layoutX="12.0" layoutY="187.0" mnemonicParsing="false" style="-fx-background-color: #4f6a8e;" text=" Simpanan" textFill="WHITE">
+      <Button layoutX="12.0" layoutY="187.0" mnemonicParsing="false" onAction="#sceneSimpanan" style="-fx-background-color: #4f6a8e;" text=" Simpanan" textFill="WHITE">
          <font>
             <Font name="Eras Demi ITC" size="20.0" />
          </font>
@@ -52,7 +52,7 @@
             </ImageView>
          </graphic>
       </Button>
-      <Button layoutX="5.0" layoutY="276.0" mnemonicParsing="false" style="-fx-background-color: #4f6a8e;" text="Transaksi" textFill="WHITE">
+      <Button layoutX="5.0" layoutY="276.0" mnemonicParsing="false" onAction="#sceneTransaksi" style="-fx-background-color: #4f6a8e;" text="Transaksi" textFill="WHITE">
          <font>
             <Font name="Eras Demi ITC" size="20.0" />
          </font>

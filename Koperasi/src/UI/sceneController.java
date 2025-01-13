@@ -43,6 +43,18 @@ public class sceneController { // Ganti nama kelas dengan kapitalisasi yang bena
     public void sceneDetailTransaksi(ActionEvent event) throws IOException {
     	loadScene(event,"DetailTransaksi.fxml");
     }
+    
+    public void sceneProfile(ActionEvent event) throws IOException {
+    	loadScene(event,"Profile.fxml");
+    }
+    
+    public void sceneProfileAdmin(ActionEvent event) throws IOException {
+    	loadScene(event,"ProfileAdmin.fxml");
+    }
+    
+    public void sceneVerifikasi(ActionEvent event) throws IOException {
+    	loadScene(event,"VerifikasiPinjam.fxml");
+    }
 
     // Metode untuk memuat dan mengubah scene (aku ubah dikit biar manggilnya gampang)
     private void loadScene(ActionEvent event, String fxmlFile) throws IOException {
