@@ -56,6 +56,14 @@ public class sceneController { // Ganti nama kelas dengan kapitalisasi yang bena
     	loadScene(event,"VerifikasiPinjam.fxml");
     }
 
+    public void sceneRegister(ActionEvent event) throws IOException {
+    	loadScene(event,"Register.fxml");
+    }
+    
+    public void sceneLogin(ActionEvent event) throws IOException {
+    	loadScene(event,"Login.fxml");
+    }
+    
     // Metode untuk memuat dan mengubah scene (aku ubah dikit biar manggilnya gampang)
     private void loadScene(ActionEvent event, String fxmlFile) throws IOException {
         root = FXMLLoader.load(getClass().getResource(fxmlFile));
