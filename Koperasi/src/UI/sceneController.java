@@ -1,18 +1,64 @@
 package UI;
 
 import java.io.IOException;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import javafx.scene.control.DatePicker;
+import javafx.scene.control.PasswordField;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
 
 public class sceneController { // Ganti nama kelas dengan kapitalisasi yang benar
 
     private Stage stage;
     private Scene scene;
     private Parent root;
+    private Connection con;
+
+    @FXML private TextField namaField;
+    @FXML private DatePicker tanggalLahirField;
+    @FXML private TextArea alamatField;
+    @FXML private TextField usernameField;
+    @FXML private PasswordField passwordField;
+
+    public void initialize() {
+        try {
+            String url = "jdbc:mysql://localhost:3306/koperasi"; 
+            String user = "root";
+            String pass = "";
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            con = DriverManager.getConnection(url, user, pass);
+        } catch (ClassNotFoundException | SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    private void registerUser(ActionEvent event) {
+        String insertQuery = "INSERT INTO dim_anggota (nama, tanggal_lahir, alamat, username, password) VALUES (?, ?, ?, ?, ?)";
+        
+        try (PreparedStatement pst = con.prepareStatement(insertQuery)) {
+            pst.setString(1, namaField.getText());
+            pst.setDate(2, java.sql.Date.valueOf(tanggalLahirField.getValue()));
+            pst.setString(3, alamatField.getText());
+            pst.setString(4, usernameField.getText());
+            pst.setString(5, passwordField.getText());
+            
+            pst.executeUpdate();
+            System.out.println("User registered successfully!");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 
     // Metode untuk mengubah scene ke BayarPinjaman.fxml
     public void sceneBayarPinjaman(ActionEvent event) throws IOException {
@@ -36,32 +82,32 @@ public class sceneController { // Ganti nama kelas dengan kapitalisasi yang bena
     
     // Metode untuk mengubah scene ke Transfer.fxml
     public void sceneTransfer(ActionEvent event) throws IOException {
-    	loadScene(event, "Transfer.fxml");
+        loadScene(event, "Transfer.fxml");
     }
     
     // Metode untuk mengubah scene ke DetailTransaksi.fxml
     public void sceneDetailTransaksi(ActionEvent event) throws IOException {
-    	loadScene(event,"DetailTransaksi.fxml");
+        loadScene(event,"DetailTransaksi.fxml");
     }
     
     public void sceneProfile(ActionEvent event) throws IOException {
-    	loadScene(event,"Profile.fxml");
+        loadScene(event,"Profile.fxml");
     }
     
     public void sceneProfileAdmin(ActionEvent event) throws IOException {
-    	loadScene(event,"ProfileAdmin.fxml");
+        loadScene(event,"ProfileAdmin.fxml");
     }
     
     public void sceneVerifikasi(ActionEvent event) throws IOException {
-    	loadScene(event,"VerifikasiPinjam.fxml");
+        loadScene(event,"VerifikasiPinjam.fxml");
     }
 
     public void sceneRegister(ActionEvent event) throws IOException {
-    	loadScene(event,"Register.fxml");
+        loadScene(event,"Register.fxml");
     }
     
     public void sceneLogin(ActionEvent event) throws IOException {
-    	loadScene(event,"Login.fxml");
+        loadScene(event,"Login.fxml");
     }
     
     // Metode untuk memuat dan mengubah scene (aku ubah dikit biar manggilnya gampang)

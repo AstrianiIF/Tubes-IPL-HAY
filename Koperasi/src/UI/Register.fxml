@@ -23,7 +23,7 @@
             <Font name="Eras Demi ITC" size="64.0" />
          </font>
       </Label>
-      <Button layoutX="209.0" layoutY="656.0" mnemonicParsing="false" prefHeight="49.0" prefWidth="266.0" style="-fx-background-color: #0cc0df; -fx-background-radius: 70;" text="Register" textFill="WHITE">
+      <Button layoutX="209.0" layoutY="656.0" mnemonicParsing="false" onAction="#registerUser" prefHeight="49.0" prefWidth="266.0" style="-fx-background-color: #0cc0df; -fx-background-radius: 70;" text="Register" textFill="WHITE">
          <font>
             <Font size="21.0" />
          </font>
@@ -55,11 +55,11 @@
                   <Font name="Eras Demi ITC" size="24.0" />
                </font>
             </Label>
-            <TextField layoutX="177.0" layoutY="28.0" prefHeight="26.0" prefWidth="266.0" />
-            <DatePicker layoutX="177.0" layoutY="109.0" prefHeight="26.0" prefWidth="266.0" />
-            <TextArea layoutX="177.0" layoutY="185.0" prefHeight="38.0" prefWidth="266.0" />
-            <TextField layoutX="177.0" layoutY="266.0" prefHeight="26.0" prefWidth="266.0" />
-            <PasswordField layoutX="177.0" layoutY="354.0" prefHeight="26.0" prefWidth="266.0" />
+            <TextField fx:id="namaField" layoutX="177.0" layoutY="28.0" prefHeight="26.0" prefWidth="266.0" />
+            <DatePicker fx:id="tanggalLahirField" layoutX="177.0" layoutY="109.0" prefHeight="26.0" prefWidth="266.0" />
+            <TextArea fx:id="alamatField" layoutX="177.0" layoutY="185.0" prefHeight="38.0" prefWidth="266.0" />
+            <TextField fx:id="usernameField" layoutX="177.0" layoutY="266.0" prefHeight="26.0" prefWidth="266.0" />
+            <PasswordField fx:id="passwordField" layoutX="177.0" layoutY="354.0" prefHeight="26.0" prefWidth="266.0" />
          </children>
       </AnchorPane>
       <Button layoutX="36.0" layoutY="31.0" mnemonicParsing="false" onAction="#sceneLogin" prefHeight="38.0" prefWidth="48.0" style="-fx-background-color: #0cc0df; -fx-background-radius: 70;" text="&lt;" textFill="WHITE">
