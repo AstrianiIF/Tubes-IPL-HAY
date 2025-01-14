@@ -44,6 +44,10 @@ public class sceneController {
     @FXML private TextArea alamatField;
     @FXML private TextField usernameField;
     @FXML private PasswordField passwordField;
+    @FXML private TextField IDNasabahTransfer; 
+    @FXML private TextField NamaNasabahTransfer; 
+    @FXML private TextField NominalTransfer; 
+
 
     public void initialize() {
         try {
@@ -53,26 +57,76 @@ public class sceneController {
             e.printStackTrace();
         }
     }
+    
+    @FXML
+    private void transferAdmin(ActionEvent event) {
+        String anggotaID = IDNasabahTransfer.getText();
+        double nominal = Double.parseDouble(NominalTransfer.getText());
+
+        String checkQuery = "SELECT COUNT(*) FROM fact_simpanan WHERE Anggota_ID = ?";
+        String insertQuery = "INSERT INTO fact_simpanan (Anggota_ID, Total_Simpanan) VALUES (?, ?)";
+        String updateQuery = "UPDATE fact_simpanan SET Total_Simpanan = Total_Simpanan + ? WHERE Anggota_ID = ?";
+
+        try (PreparedStatement checkPst = con.prepareStatement(checkQuery)) {
+            checkPst.setString(1, anggotaID);
+            ResultSet rs = checkPst.executeQuery();
+
+            if (rs.next() && rs.getInt(1) == 0) {
+                // Jika ID tidak ditemukan, lakukan INSERT
+                try (PreparedStatement insertPst = con.prepareStatement(insertQuery)) {
+                    insertPst.setString(1, anggotaID);
+                    insertPst.setDouble(2, nominal);
+                    insertPst.executeUpdate();
+                    System.out.println("Data anggota baru ditambahkan ke fact_simpanan.");
+                }
+            } else {
+                // Jika ID ditemukan, lakukan UPDATE
+                try (PreparedStatement updatePst = con.prepareStatement(updateQuery)) {
+                    updatePst.setDouble(1, nominal);
+                    updatePst.setString(2, anggotaID);
+                    updatePst.executeUpdate();
+                    System.out.println("Nominal simpanan berhasil diperbarui.");
+                }
+            }
+            IDNasabahTransfer.setText(""); 
+            NominalTransfer.setText("");
+            NamaNasabahTransfer.setText("");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
 
     @FXML
     private void registerUser(ActionEvent event) {
-        String insertQuery = "INSERT INTO dim_anggota (nama, tanggal_lahir, alamat, username, password) VALUES (?, ?, ?, ?, ?)";
+        String insertAnggotaQuery = "INSERT INTO dim_anggota (Nama, Tanggal_Lahir, Alamat, Username, Password) VALUES (?, ?, ?, ?, ?)";
+        String insertSimpananQuery = "INSERT INTO fact_simpanan (Anggota_ID, Total_Simpanan) VALUES (?, 0)";
         
-        try (PreparedStatement pst = con.prepareStatement(insertQuery)) {
-            pst.setString(1, namaField.getText());
-            pst.setDate(2, java.sql.Date.valueOf(tanggalLahirField.getValue()));
-            pst.setString(3, alamatField.getText());
-            pst.setString(4, usernameField.getText());
-            pst.setString(5, passwordField.getText());
+        try {
+            // Masukkan data ke dim_anggota
+            PreparedStatement anggotaPst = con.prepareStatement(insertAnggotaQuery, PreparedStatement.RETURN_GENERATED_KEYS);
+            anggotaPst.setString(1, namaField.getText());
+            anggotaPst.setDate(2, java.sql.Date.valueOf(tanggalLahirField.getValue()));
+            anggotaPst.setString(3, alamatField.getText());
+            anggotaPst.setString(4, usernameField.getText());
+            anggotaPst.setString(5, passwordField.getText());
+            anggotaPst.executeUpdate();
+
+            // Ambil Anggota_ID yang baru saja dimasukkan
+            ResultSet rs = anggotaPst.getGeneratedKeys();
+            if (rs.next()) {
+                int anggotaID = rs.getInt(1);
+
+                // Masukkan entri awal ke fact_simpanan
+                PreparedStatement simpananPst = con.prepareStatement(insertSimpananQuery);
+                simpananPst.setInt(1, anggotaID);
+                simpananPst.executeUpdate();
+                System.out.println("Entri awal fact_simpanan dibuat.");
+            }
             
-            pst.executeUpdate();
-            System.out.println("User registered successfully!");
-            
-            // Navigate to login page upon successful registration
+            // Pindah ke halaman login
             sceneLogin(event);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
+        } catch (SQLException | IOException e) {
             e.printStackTrace();
         }
     }
