@@ -39,7 +39,7 @@
          <graphic>
             <ImageView fitHeight="60.0" fitWidth="65.0">
                <image>
-                  <Image url="file:///C:/Users/asus/eclipse-workspace/Koperasi/res/logo/Profile.png" />
+                  <Image url="@../../res/logo/Profile.png" />
                </image>
             </ImageView>
          </graphic>
@@ -51,7 +51,7 @@
          <graphic>
             <ImageView fitHeight="55.0" fitWidth="55.0">
                <image>
-                  <Image url="file:///C:/Users/asus/eclipse-workspace/Koperasi/res/logo/Home.png" />
+                  <Image url="@../../res/logo/Home.png" />
                </image>
             </ImageView>
          </graphic>
@@ -63,19 +63,19 @@
          <graphic>
             <ImageView fitHeight="55.0" fitWidth="70.0">
                <image>
-                  <Image url="file:///C:/Users/asus/eclipse-workspace/Koperasi/res/logo/Transaksi.png" />
+                  <Image url="@../../res/logo/Transaksi.png" />
                </image>
             </ImageView>
          </graphic>
       </Button>
-      <Button layoutX="6.0" layoutY="361.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="180.0" style="-fx-background-color: #4f6a8e;" text=" Log Out" textFill="WHITE">
+      <Button layoutX="6.0" layoutY="361.0" mnemonicParsing="false" onAction="#logoutUser" prefHeight="50.0" prefWidth="180.0" style="-fx-background-color: #4f6a8e;" text=" Log Out" textFill="WHITE">
          <font>
             <Font name="Eras Demi ITC" size="20.0" />
          </font>
          <graphic>
             <ImageView fitHeight="50.0" fitWidth="60.0">
                <image>
-                  <Image url="file:///C:/Users/asus/eclipse-workspace/Koperasi/res/logo/LogOut.png" />
+                  <Image url="@../../res/logo/LogOut.png" />
                </image>
             </ImageView>
          </graphic>

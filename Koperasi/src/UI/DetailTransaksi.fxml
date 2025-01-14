@@ -60,7 +60,7 @@
             </ImageView>
          </graphic>
       </Button>
-      <Button layoutX="6.0" layoutY="361.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="180.0" style="-fx-background-color: #4f6a8e;" text=" Log Out" textFill="WHITE">
+      <Button layoutX="6.0" layoutY="361.0" mnemonicParsing="false" onAction="#logoutUser" prefHeight="50.0" prefWidth="180.0" style="-fx-background-color: #4f6a8e;" text=" Log Out" textFill="WHITE">
          <font>
             <Font name="Eras Demi ITC" size="20.0" />
          </font>
