@@ -17,7 +17,7 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 
-public class sceneController { // Ganti nama kelas dengan kapitalisasi yang benar
+public class sceneController {
 
     private Stage stage;
     private Scene scene;
@@ -55,37 +55,39 @@ public class sceneController { // Ganti nama kelas dengan kapitalisasi yang bena
             
             pst.executeUpdate();
             System.out.println("User registered successfully!");
-        } catch (SQLException e) {
+            // After successful registration, redirect to login
+            sceneLogin(event);
+        } catch (SQLException | IOException e) {
             e.printStackTrace();
         }
     }
 
-    // Metode untuk mengubah scene ke BayarPinjaman.fxml
+    // Method to change scene to BayarPinjaman.fxml
     public void sceneBayarPinjaman(ActionEvent event) throws IOException {
         loadScene(event, "BayarPinjaman.fxml");
     }
 
-    // Metode untuk mengubah scene ke Pinjaman.fxml
+    // Method to change scene to Pinjaman.fxml
     public void scenePinjaman(ActionEvent event) throws IOException {
         loadScene(event, "Pinjaman.fxml");
     }
 
-    // Metode untuk mengubah scene ke Transaksi.fxml
+    // Method to change scene to Transaksi.fxml
     public void sceneTransaksi(ActionEvent event) throws IOException {
         loadScene(event, "Transaksi.fxml");
     }
 
-    // Metode untuk mengubah scene ke Simpanan.fxml
+    // Method to change scene to Simpanan.fxml
     public void sceneSimpanan(ActionEvent event) throws IOException {
         loadScene(event, "Simpanan.fxml");
     }
     
-    // Metode untuk mengubah scene ke Transfer.fxml
+    // Method to change scene to Transfer.fxml
     public void sceneTransfer(ActionEvent event) throws IOException {
         loadScene(event, "Transfer.fxml");
     }
     
-    // Metode untuk mengubah scene ke DetailTransaksi.fxml
+    // Method to change scene to DetailTransaksi.fxml
     public void sceneDetailTransaksi(ActionEvent event) throws IOException {
         loadScene(event,"DetailTransaksi.fxml");
     }
@@ -110,7 +112,7 @@ public class sceneController { // Ganti nama kelas dengan kapitalisasi yang bena
         loadScene(event,"Login.fxml");
     }
     
-    // Metode untuk memuat dan mengubah scene (aku ubah dikit biar manggilnya gampang)
+    // Method to load and change the scene (simplified for easier calls)
     private void loadScene(ActionEvent event, String fxmlFile) throws IOException {
         root = FXMLLoader.load(getClass().getResource(fxmlFile));
         stage = (Stage)((Node)event.getSource()).getScene().getWindow();
