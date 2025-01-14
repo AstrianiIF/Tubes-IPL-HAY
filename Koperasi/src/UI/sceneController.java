@@ -2,6 +2,7 @@ package UI;
 
 import java.io.IOException;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.ResultSet;
 import KoneksiDatabase.DatabaseManager;
@@ -16,6 +17,10 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
+import javafx.scene.control.TextField;
+import javafx.scene.control.DatePicker;
+import javafx.scene.control.PasswordField;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 
 public class sceneController {
@@ -34,6 +39,11 @@ public class sceneController {
     @FXML private Label ProfileNamaAdmin;
     @FXML private Label ProfileAlamatAdmin;
     @FXML private Label ProfileTanggalLahirAdmin;
+    @FXML private TextField namaField;
+    @FXML private DatePicker tanggalLahirField;
+    @FXML private TextArea alamatField;
+    @FXML private TextField usernameField;
+    @FXML private PasswordField passwordField;
 
     public void initialize() {
         try {
@@ -44,6 +54,24 @@ public class sceneController {
         }
     }
 
+    @FXML
+    private void registerUser(ActionEvent event) {
+        String insertQuery = "INSERT INTO dim_anggota (nama, tanggal_lahir, alamat, username, password) VALUES (?, ?, ?, ?, ?)";
+        
+        try (PreparedStatement pst = con.prepareStatement(insertQuery)) {
+            pst.setString(1, namaField.getText());
+            pst.setDate(2, java.sql.Date.valueOf(tanggalLahirField.getValue()));
+            pst.setString(3, alamatField.getText());
+            pst.setString(4, usernameField.getText());
+            pst.setString(5, passwordField.getText());
+            
+            pst.executeUpdate();
+            System.out.println("User registered successfully!");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+    
     @FXML
     private void loginUser(ActionEvent event) {
         String username = UsernameLogin.getText();
