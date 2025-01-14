@@ -67,10 +67,16 @@ public class sceneController {
             
             pst.executeUpdate();
             System.out.println("User registered successfully!");
+            
+            // Navigate to login page upon successful registration
+            sceneLogin(event);
         } catch (SQLException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
+
     
     @FXML
     private void loginUser(ActionEvent event) {
