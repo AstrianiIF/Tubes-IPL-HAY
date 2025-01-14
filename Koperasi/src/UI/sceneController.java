@@ -60,23 +60,19 @@ public class sceneController {
 
         try {
             ResultSet rs;
-            if ((rs = authManager.loginAdmin(username, password)) != null) {
+            if ((rs = authManager.loginAdmin(username, password)) != null && rs.next()) {
                 System.out.println("Admin login berhasil!");
-                if (rs.next()) {
-                    // Menyimpan data admin yang login
-                    loggedInAdminNama = rs.getString("Nama");
-                    loggedInAdminAlamat = rs.getString("Alamat");
-                    loggedInAdminTanggalLahir = rs.getString("Tanggal_Lahir");
-                }
+                // Menyimpan data admin yang login
+                loggedInAdminNama = rs.getString("Nama");
+                loggedInAdminAlamat = rs.getString("Alamat");
+                loggedInAdminTanggalLahir = rs.getString("Tanggal_Lahir");
                 sceneProfileAdmin(event);
-            } else if ((rs = authManager.loginUser(username, password)) != null) {
+            } else if ((rs = authManager.loginUser(username, password)) != null && rs.next()) {
                 System.out.println("Login anggota berhasil!");
-                if (rs.next()) {
-                    // Menyimpan data pengguna yang login
-                    loggedInNama = rs.getString("nama");
-                    loggedInAlamat = rs.getString("alamat");
-                    loggedInTanggalLahir = rs.getString("tanggal_lahir");
-                }
+                // Menyimpan data pengguna yang login
+                loggedInNama = rs.getString("nama");
+                loggedInAlamat = rs.getString("alamat");
+                loggedInTanggalLahir = rs.getString("tanggal_lahir");
                 sceneProfile(event);
             } else {
                 System.out.println("Username atau password salah.");
@@ -140,6 +136,9 @@ public class sceneController {
         loggedInNama = null;
         loggedInAlamat = null;
         loggedInTanggalLahir = null;
+        loggedInAdminNama = null;
+        loggedInAdminAlamat = null;
+        loggedInAdminTanggalLahir = null;
 
         // Kembali ke halaman login
         sceneLogin(event);
