@@ -30,11 +30,19 @@ public class sceneController {
     private String loggedInAlamat;
     private String loggedInTanggalLahir;
 
+    // Variabel untuk menyimpan data admin yang login
+    private String loggedInAdminNama;
+    private String loggedInAdminAlamat;
+    private String loggedInAdminTanggalLahir;
+
     @FXML private TextField UsernameLogin;
     @FXML private PasswordField PasswordLogin;
     @FXML private Label ProfileNamaAnggota;
     @FXML private Label ProfileAlamatAnggota;
     @FXML private Label ProfileTanggalLahirAnggota;
+    @FXML private Label ProfileNamaAdmin;
+    @FXML private Label ProfileAlamatAdmin;
+    @FXML private Label ProfileTanggalLahirAdmin;
 
     public void initialize() {
         try {
@@ -51,21 +59,27 @@ public class sceneController {
         String password = PasswordLogin.getText();
 
         try {
-            if (authManager.loginAdmin(username, password)) {
+            ResultSet rs;
+            if ((rs = authManager.loginAdmin(username, password)) != null) {
                 System.out.println("Admin login berhasil!");
-                sceneVerifikasi(event);
-            } else {
-                ResultSet rs = authManager.loginUser(username, password);
                 if (rs.next()) {
-                    System.out.println("Login anggota berhasil!");
+                    // Menyimpan data admin yang login
+                    loggedInAdminNama = rs.getString("Nama");
+                    loggedInAdminAlamat = rs.getString("Alamat");
+                    loggedInAdminTanggalLahir = rs.getString("Tanggal_Lahir");
+                }
+                sceneProfileAdmin(event);
+            } else if ((rs = authManager.loginUser(username, password)) != null) {
+                System.out.println("Login anggota berhasil!");
+                if (rs.next()) {
                     // Menyimpan data pengguna yang login
                     loggedInNama = rs.getString("nama");
                     loggedInAlamat = rs.getString("alamat");
                     loggedInTanggalLahir = rs.getString("tanggal_lahir");
-                    sceneProfile(event);
-                } else {
-                    System.out.println("Username atau password salah.");
                 }
+                sceneProfile(event);
+            } else {
+                System.out.println("Username atau password salah.");
             }
         } catch (SQLException | IOException e) {
             e.printStackTrace();
@@ -89,11 +103,35 @@ public class sceneController {
         stage.show();
     }
 
-    // Method untuk menyetel data profil
+    // Method untuk mengubah scene ke profile admin dan meneruskan data admin
+    public void sceneProfileAdmin(ActionEvent event) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("ProfileAdmin.fxml"));
+        root = loader.load();
+
+        // Mendapatkan controller dari scene profile admin
+        sceneController profileAdminController = loader.getController();
+
+        // Meneruskan data admin ke controller scene profile admin
+        profileAdminController.setProfileAdminData(loggedInAdminNama, loggedInAdminAlamat, loggedInAdminTanggalLahir);
+
+        stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        scene = new Scene(root);
+        stage.setScene(scene);
+        stage.show();
+    }
+
+    // Method untuk menyetel data profil anggota
     public void setProfileData(String nama, String alamat, String tanggalLahir) {
         ProfileNamaAnggota.setText(nama);
         ProfileAlamatAnggota.setText(alamat);
         ProfileTanggalLahirAnggota.setText(tanggalLahir);
+    }
+
+    // Method untuk menyetel data profil admin
+    public void setProfileAdminData(String nama, String alamat, String tanggalLahir) {
+        ProfileNamaAdmin.setText(nama);
+        ProfileAlamatAdmin.setText(alamat);
+        ProfileTanggalLahirAdmin.setText(tanggalLahir);
     }
 
     @FXML
@@ -135,10 +173,6 @@ public class sceneController {
     // Method untuk mengubah scene ke DetailTransaksi.fxml
     public void sceneDetailTransaksi(ActionEvent event) throws IOException {
         loadScene(event, "DetailTransaksi.fxml");
-    }
-
-    public void sceneProfileAdmin(ActionEvent event) throws IOException {
-        loadScene(event, "ProfileAdmin.fxml");
     }
 
     public void sceneVerifikasi(ActionEvent event) throws IOException {

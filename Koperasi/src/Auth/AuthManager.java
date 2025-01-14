@@ -12,14 +12,12 @@ public class AuthManager {
         this.con = con;
     }
 
-    public boolean loginAdmin(String username, String password) throws SQLException {
+    public ResultSet loginAdmin(String username, String password) throws SQLException {
         String query = "SELECT * FROM dim_admin WHERE Username = ? AND Password = ?";
-        try (PreparedStatement pst = con.prepareStatement(query)) {
-            pst.setString(1, username);
-            pst.setString(2, password);
-            ResultSet rs = pst.executeQuery();
-            return rs.next();
-        }
+        PreparedStatement pst = con.prepareStatement(query);
+        pst.setString(1, username);
+        pst.setString(2, password);
+        return pst.executeQuery();
     }
 
     public ResultSet loginUser(String username, String password) throws SQLException {

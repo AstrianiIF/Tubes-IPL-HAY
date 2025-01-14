@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 18, 2024 at 11:54 AM
+-- Generation Time: Jan 14, 2025 at 11:16 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.0.30
 
@@ -36,6 +36,13 @@ CREATE TABLE `dim_admin` (
   `Password` varchar(18) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `dim_admin`
+--
+
+INSERT INTO `dim_admin` (`Admin_ID`, `Nama`, `Alamat`, `Tanggal_Lahir`, `Username`, `Password`) VALUES
+(2, 'Admin', 'RumahAdmin', '2025-01-01', 'Admin', 'admin123');
+
 -- --------------------------------------------------------
 
 --
@@ -50,6 +57,13 @@ CREATE TABLE `dim_anggota` (
   `Username` varchar(18) NOT NULL,
   `Password` varchar(18) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `dim_anggota`
+--
+
+INSERT INTO `dim_anggota` (`Anggota_ID`, `Nama`, `Alamat`, `Tanggal_Lahir`, `Username`, `Password`) VALUES
+(1, 'Anwar', 'Jl. Prongpong', '2025-01-01', 'AnwarS', '123');
 
 -- --------------------------------------------------------
 
@@ -110,6 +124,7 @@ CREATE TABLE `fact_simpanan` (
   `Fact_Simpanan_ID` int(11) NOT NULL,
   `Simpan_ID` int(11) DEFAULT NULL,
   `Anggota_ID` int(11) DEFAULT NULL,
+  `Admin_ID` int(11) DEFAULT NULL,
   `Total_Simpanan` decimal(15,2) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -175,6 +190,7 @@ ALTER TABLE `dim_status`
 --
 ALTER TABLE `fact_simpanan`
   ADD PRIMARY KEY (`Fact_Simpanan_ID`),
+  ADD UNIQUE KEY `Admin_ID` (`Admin_ID`),
   ADD KEY `Simpan_ID` (`Simpan_ID`),
   ADD KEY `Anggota_ID` (`Anggota_ID`);
 
@@ -197,13 +213,13 @@ ALTER TABLE `fact_transaksi_pinjaman`
 -- AUTO_INCREMENT for table `dim_admin`
 --
 ALTER TABLE `dim_admin`
-  MODIFY `Admin_ID` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `Admin_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `dim_anggota`
 --
 ALTER TABLE `dim_anggota`
-  MODIFY `Anggota_ID` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `Anggota_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `dim_status`
@@ -226,7 +242,8 @@ ALTER TABLE `fact_transaksi_pinjaman`
 --
 ALTER TABLE `fact_simpanan`
   ADD CONSTRAINT `fact_simpanan_ibfk_1` FOREIGN KEY (`Simpan_ID`) REFERENCES `dim_simpan` (`Simpan_ID`),
-  ADD CONSTRAINT `fact_simpanan_ibfk_2` FOREIGN KEY (`Anggota_ID`) REFERENCES `dim_anggota` (`Anggota_ID`);
+  ADD CONSTRAINT `fact_simpanan_ibfk_2` FOREIGN KEY (`Anggota_ID`) REFERENCES `dim_anggota` (`Anggota_ID`),
+  ADD CONSTRAINT `fact_simpanan_ibfk_3` FOREIGN KEY (`Admin_ID`) REFERENCES `dim_admin` (`Admin_ID`);
 
 --
 -- Constraints for table `fact_transaksi_pinjaman`

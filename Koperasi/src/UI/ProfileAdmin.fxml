@@ -70,17 +70,17 @@
          </font>
       </Label>
       <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#e1e1e1" height="89.0" layoutX="306.0" layoutY="625.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" style="-fx-arc-height: 70; -fx-arc-width: 70;" width="546.0" />
-      <Label layoutX="473.0" layoutY="299.0" text="John Doe">
+      <Label fx:id="ProfileNamaAdmin" layoutX="473.0" layoutY="299.0" text="John Doe">
          <font>
             <Font name="Eras Demi ITC" size="42.0" />
          </font>
       </Label>
-      <Label layoutX="473.0" layoutY="469.0" text="Jl. Khayalan">
+      <Label fx:id="ProfileAlamatAdmin" layoutX="473.0" layoutY="469.0" text="Jl. Khayalan">
          <font>
             <Font name="Eras Demi ITC" size="42.0" />
          </font>
       </Label>
-      <Label layoutX="428.0" layoutY="639.0" text="20 Deseber 1994">
+      <Label fx:id="ProfileTanggalLahirAdmin" layoutX="428.0" layoutY="639.0" text="20 Deseber 1994">
          <font>
             <Font name="Eras Demi ITC" size="42.0" />
          </font>
