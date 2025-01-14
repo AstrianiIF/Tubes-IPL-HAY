@@ -6,6 +6,7 @@ import java.sql.SQLException;
 import java.sql.ResultSet;
 import KoneksiDatabase.DatabaseManager;
 import Auth.AuthManager;
+import Model.UserData;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -24,16 +25,6 @@ public class sceneController {
     private Parent root;
     private Connection con;
     private AuthManager authManager;
-
-    // Variabel untuk menyimpan data pengguna yang login
-    private String loggedInNama;
-    private String loggedInAlamat;
-    private String loggedInTanggalLahir;
-
-    // Variabel untuk menyimpan data admin yang login
-    private String loggedInAdminNama;
-    private String loggedInAdminAlamat;
-    private String loggedInAdminTanggalLahir;
 
     @FXML private TextField UsernameLogin;
     @FXML private PasswordField PasswordLogin;
@@ -62,17 +53,19 @@ public class sceneController {
             ResultSet rs;
             if ((rs = authManager.loginAdmin(username, password)) != null && rs.next()) {
                 System.out.println("Admin login berhasil!");
-                // Menyimpan data admin yang login
-                loggedInAdminNama = rs.getString("Nama");
-                loggedInAdminAlamat = rs.getString("Alamat");
-                loggedInAdminTanggalLahir = rs.getString("Tanggal_Lahir");
+                // Menyimpan data admin yang login ke UserData
+                UserData userData = UserData.getInstance();
+                userData.setNama(rs.getString("Nama"));
+                userData.setAlamat(rs.getString("Alamat"));
+                userData.setTanggalLahir(rs.getString("Tanggal_Lahir"));
                 sceneProfileAdmin(event);
             } else if ((rs = authManager.loginUser(username, password)) != null && rs.next()) {
                 System.out.println("Login anggota berhasil!");
-                // Menyimpan data pengguna yang login
-                loggedInNama = rs.getString("nama");
-                loggedInAlamat = rs.getString("alamat");
-                loggedInTanggalLahir = rs.getString("tanggal_lahir");
+                // Menyimpan data pengguna yang login ke UserData
+                UserData userData = UserData.getInstance();
+                userData.setNama(rs.getString("nama"));
+                userData.setAlamat(rs.getString("alamat"));
+                userData.setTanggalLahir(rs.getString("tanggal_lahir"));
                 sceneProfile(event);
             } else {
                 System.out.println("Username atau password salah.");
@@ -90,8 +83,9 @@ public class sceneController {
         // Mendapatkan controller dari scene profile
         sceneController profileController = loader.getController();
 
-        // Meneruskan data pengguna ke controller scene profile
-        profileController.setProfileData(loggedInNama, loggedInAlamat, loggedInTanggalLahir);
+        // Mengambil data pengguna dari UserData dan memperbarui UI
+        UserData userData = UserData.getInstance();
+        profileController.setProfileData(userData.getNama(), userData.getAlamat(), userData.getTanggalLahir());
 
         stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         scene = new Scene(root);
@@ -107,8 +101,9 @@ public class sceneController {
         // Mendapatkan controller dari scene profile admin
         sceneController profileAdminController = loader.getController();
 
-        // Meneruskan data admin ke controller scene profile admin
-        profileAdminController.setProfileAdminData(loggedInAdminNama, loggedInAdminAlamat, loggedInAdminTanggalLahir);
+        // Mengambil data admin dari UserData dan memperbarui UI
+        UserData userData = UserData.getInstance();
+        profileAdminController.setProfileAdminData(userData.getNama(), userData.getAlamat(), userData.getTanggalLahir());
 
         stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         scene = new Scene(root);
@@ -133,12 +128,10 @@ public class sceneController {
     @FXML
     private void logoutUser(ActionEvent event) throws IOException {
         // Menghapus data pengguna yang sedang login
-        loggedInNama = null;
-        loggedInAlamat = null;
-        loggedInTanggalLahir = null;
-        loggedInAdminNama = null;
-        loggedInAdminAlamat = null;
-        loggedInAdminTanggalLahir = null;
+        UserData userData = UserData.getInstance();
+        userData.setNama(null);
+        userData.setAlamat(null);
+        userData.setTanggalLahir(null);
 
         // Kembali ke halaman login
         sceneLogin(event);

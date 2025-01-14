@@ -1,33 +1,43 @@
 package Model;
 
 public class UserData {
-    private String username;
+    private static UserData instance;
     private String nama;
     private String alamat;
     private String tanggalLahir;
 
-    // Constructor, getter dan setter
-
-    public UserData(String username, String nama, String alamat, String tanggalLahir) {
-        this.username = username;
-        this.nama = nama;
-        this.alamat = alamat;
-        this.tanggalLahir = tanggalLahir;
+    private UserData() {
+        // Private constructor to restrict instantiation
     }
 
-    public String getUsername() {
-        return username;
+    public static UserData getInstance() {
+        if (instance == null) {
+            instance = new UserData();
+        }
+        return instance;
     }
 
     public String getNama() {
         return nama;
     }
 
+    public void setNama(String nama) {
+        this.nama = nama;
+    }
+
     public String getAlamat() {
         return alamat;
     }
 
+    public void setAlamat(String alamat) {
+        this.alamat = alamat;
+    }
+
     public String getTanggalLahir() {
         return tanggalLahir;
+    }
+
+    public void setTanggalLahir(String tanggalLahir) {
+        this.tanggalLahir = tanggalLahir;
     }
 }
