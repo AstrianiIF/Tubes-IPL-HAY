@@ -27,31 +27,6 @@
             <Font name="Eras Demi ITC" size="64.0" />
          </font>
       </Label>
-      
-      <Button layoutX="-3.0" layoutY="106.0" mnemonicParsing="false" prefHeight="70.0" prefWidth="180.0" style="-fx-background-color: #4f6a8e;" text="Profile" textFill="WHITE">
-         <font>
-            <Font name="Eras Demi ITC" size="20.0" />
-         </font>
-         <graphic>
-            <ImageView fitHeight="60.0" fitWidth="65.0">
-               <image>
-                  <Image url="@../../res/logo/Profile.png" />
-               </image>
-            </ImageView>
-         </graphic>
-      </Button>
-      <Button layoutX="5.0" layoutY="259.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="180.0" style="-fx-background-color: #4f6a8e;" text=" Log Out" textFill="WHITE">
-         <font>
-            <Font name="Eras Demi ITC" size="20.0" />
-         </font>
-         <graphic>
-            <ImageView fitHeight="50.0" fitWidth="60.0">
-               <image>
-                  <Image url="@../../res/logo/LogOut.png" />
-               </image>
-            </ImageView>
-         </graphic>
-      </Button>
       <Label layoutX="308.0" layoutY="204.0" prefHeight="75.0" prefWidth="531.0" text="Nama Nasabah">
          <font>
             <Font name="Eras Demi ITC" size="48.0" />
@@ -85,7 +60,19 @@
             <Font name="Eras Demi ITC" size="42.0" />
          </font>
       </Label>
-      <Button layoutX="11.0" layoutY="179.0" mnemonicParsing="false" onAction="#sceneVerifikasi" style="-fx-background-color: #4f6a8e;" text="Verifikasi" textFill="WHITE">
+      <Button layoutX="7.0" layoutY="116.0" mnemonicParsing="false" onAction="#sceneProfileAdmin" prefHeight="70.0" prefWidth="180.0" style="-fx-background-color: #4f6a8e;" text="Profile" textFill="WHITE">
+         <font>
+            <Font name="Eras Demi ITC" size="20.0" />
+         </font>
+         <graphic>
+            <ImageView fitHeight="60.0" fitWidth="65.0">
+               <image>
+                  <Image url="@../../res/logo/Profile.png" />
+               </image>
+            </ImageView>
+         </graphic>
+      </Button>
+      <Button layoutX="22.0" layoutY="197.0" mnemonicParsing="false" onAction="#sceneVerifikasi" style="-fx-background-color: #4f6a8e;" text="Verifikasi" textFill="WHITE">
          <font>
             <Font name="Eras Demi ITC" size="20.0" />
          </font>
@@ -93,6 +80,30 @@
             <ImageView fitHeight="55.0" fitWidth="55.0">
                <image>
                   <Image url="@../../res/logo/Home.png" />
+               </image>
+            </ImageView>
+         </graphic>
+      </Button>
+      <Button layoutX="15.0" layoutY="286.0" mnemonicParsing="false" onAction="#sceneTransfer" style="-fx-background-color: #4f6a8e;" text="Transfer" textFill="WHITE">
+         <font>
+            <Font name="Eras Demi ITC" size="20.0" />
+         </font>
+         <graphic>
+            <ImageView fitHeight="55.0" fitWidth="70.0">
+               <image>
+                  <Image url="@../../res/logo/Transaksi.png" />
+               </image>
+            </ImageView>
+         </graphic>
+      </Button>
+      <Button layoutX="16.0" layoutY="371.0" mnemonicParsing="false" onAction="#logoutUser" prefHeight="50.0" prefWidth="180.0" style="-fx-background-color: #4f6a8e;" text=" Log Out" textFill="WHITE">
+         <font>
+            <Font name="Eras Demi ITC" size="20.0" />
+         </font>
+         <graphic>
+            <ImageView fitHeight="50.0" fitWidth="60.0">
+               <image>
+                  <Image url="@../../res/logo/LogOut.png" />
                </image>
             </ImageView>
          </graphic>
