@@ -71,6 +71,14 @@ public class sceneController {
             con = DatabaseManager.getConnection();
             authManager = new AuthManager(con);
             updateTotalPinjaman();
+            
+            // Tambahkan pengecekan null
+            if (Buttonbayar != null) {
+                Buttonbayar.setOnAction(this::HitungPembayaran);
+            } else {
+                System.err.println("Warning: Buttonbayar tidak terhubung dengan FXML");
+            }
+            
         } catch (SQLException e) {
             e.printStackTrace();
         }
