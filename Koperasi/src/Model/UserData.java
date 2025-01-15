@@ -1,11 +1,14 @@
 package Model;
 
+import java.math.BigDecimal;
+
 public class UserData {
     private static UserData instance;
     private String nama;
     private String alamat;
     private String tanggalLahir;
     private int anggotaID;
+    private BigDecimal totalPinjaman;
 
     private UserData() {
         // Private constructor to restrict instantiation
@@ -49,4 +52,13 @@ public class UserData {
     public void setTanggalLahir(String tanggalLahir) {
         this.tanggalLahir = tanggalLahir;
     }
+
+    public BigDecimal getTotalPinjaman() {
+        return totalPinjaman;
+    }
+
+    public void setTotalPinjaman(BigDecimal totalPinjaman) {
+        this.totalPinjaman = totalPinjaman;
+    }
+
 }

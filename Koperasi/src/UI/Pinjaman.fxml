@@ -82,7 +82,7 @@
          </graphic>
       </Button>
       <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#e1e1e1" height="89.0" layoutX="279.0" layoutY="353.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" style="-fx-arc-height: 70; -fx-arc-width: 70;" width="546.0" />
-      <Button layoutX="276.0" layoutY="491.0" mnemonicParsing="false" prefHeight="88.0" prefWidth="249.0" style="-fx-background-color: #45a834; -fx-background-radius: 70;" text="Pinjam" textFill="WHITE">
+      <Button fx:id="ButtonPinjam" layoutX="276.0" layoutY="491.0" mnemonicParsing="false" onAction="#handleButtonPinjam" prefHeight="88.0" prefWidth="249.0" style="-fx-background-color: #45a834; -fx-background-radius: 70;" text="Pinjam" textFill="WHITE">
          <font>
             <Font name="Eras Demi ITC" size="48.0" />
          </font>
@@ -92,7 +92,7 @@
             <Font name="Eras Demi ITC" size="48.0" />
          </font>
       </Button>
-      <TextField layoutX="279.0" layoutY="348.0" prefHeight="89.0" prefWidth="546.0" promptText="Isi Nominal">
+      <TextField fx:id="pinjamField" layoutX="279.0" layoutY="348.0" prefHeight="89.0" prefWidth="546.0" promptText="Isi Nominal">
          <font>
             <Font size="36.0" />
          </font>

@@ -1,6 +1,7 @@
 package UI;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -54,13 +55,78 @@ public class sceneController {
     @FXML private TextField IDNasabahTransfer; 
     @FXML private TextField NamaNasabahTransfer; 
     @FXML private TextField NominalTransfer; 
+    @FXML private Label TextTotalPinjaman;
+    @FXML private TextField pinjamField;
     
     public void initialize() {
         try {
             con = DatabaseManager.getConnection();
             authManager = new AuthManager(con);
+            updateTotalPinjaman();
         } catch (SQLException e) {
             e.printStackTrace();
+        }
+    }
+    
+    private void updateTotalPinjaman() {
+        UserData userData = UserData.getInstance();
+        int anggotaID = userData.getAnggotaID();
+
+        try (Connection con = DatabaseManager.getConnection()) {
+            String query = "SELECT COALESCE(SUM(Total_Pinjaman), 0) AS total FROM fact_transaksi_pinjaman WHERE Anggota_ID = ?";
+            PreparedStatement pst = con.prepareStatement(query);
+            pst.setInt(1, anggotaID);
+            ResultSet rs = pst.executeQuery();
+
+            if (rs.next()) {
+                BigDecimal totalPinjaman = rs.getBigDecimal("total");
+
+                // Simpan ke UserData
+                userData.setTotalPinjaman(totalPinjaman);
+
+                // Update Label di UI Thread
+                Platform.runLater(() -> TextTotalPinjaman.setText("" + totalPinjaman));
+            } else {
+                // Jika tidak ada data, set nilai default di UserData
+                userData.setTotalPinjaman(BigDecimal.ZERO);
+                Platform.runLater(() -> TextTotalPinjaman.setText("0"));
+            }
+        } catch (SQLException e) {
+            System.err.println("Error fetching total loan amount: " + e.getMessage());
+            Platform.runLater(() -> TextTotalPinjaman.setText("Error"));
+        }
+    }
+
+    @FXML
+    private void handleButtonPinjam() {
+        String nominal = pinjamField.getText();
+        if (nominal.isEmpty()) {
+            System.out.println("Please enter a nominal amount.");
+            return;
+        }
+
+        try {
+            int amount = Integer.parseInt(nominal);
+            saveLoanAmount(amount);
+        } catch (NumberFormatException e) {
+            System.out.println("Invalid nominal amount.");
+        }
+    }
+
+    private void saveLoanAmount(int amount) {
+        UserData userData = UserData.getInstance();
+        int anggotaID = userData.getAnggotaID();
+
+        try (Connection con = DatabaseManager.getConnection()) {
+            String query = "INSERT INTO fact_transaksi_pinjaman (Anggota_ID, Total_Pinjaman) VALUES (?, ?)";
+            PreparedStatement pst = con.prepareStatement(query);
+            pst.setInt(1, anggotaID);
+            pst.setBigDecimal(2, BigDecimal.valueOf(amount));
+            pst.executeUpdate();
+
+            System.out.println("Loan amount saved successfully for user ID: " + anggotaID);
+        } catch (SQLException e) {
+            System.err.println("Error saving loan amount: " + e.getMessage());
         }
     }
 
@@ -339,9 +405,9 @@ public class sceneController {
         loadScene(event, "Transfer.fxml");
     }
 
-    public void sceneVerifikasi(ActionEvent event) throws IOException {
-        loadScene(event, "VerifikasiPinjam.fxml");
-    }
+//    public void sceneVerifikasi(ActionEvent event) throws IOException {
+//        loadScene(event, "VerifikasiPinjam.fxml");
+//    }
 
     public void sceneRegister(ActionEvent event) throws IOException {
         loadScene(event, "Register.fxml");

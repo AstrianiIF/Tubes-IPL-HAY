@@ -29,7 +29,7 @@
             <Font name="Eras Demi ITC" size="48.0" />
          </font>
       </Label>
-      <Label layoutX="337.0" layoutY="422.0" text="3.500.000">
+      <Label fx:id="TextTotalPinjaman" layoutX="337.0" layoutY="422.0" text="0">
          <font>
             <Font name="Eras Demi ITC" size="64.0" />
          </font>
