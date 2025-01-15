@@ -4,11 +4,14 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.text.DecimalFormat;
 import java.sql.ResultSet;
 import KoneksiDatabase.DatabaseManager;
 import Auth.AuthManager;
 import Model.UserData;
 import javafx.application.Platform;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -18,6 +21,8 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.PasswordField;
@@ -49,8 +54,7 @@ public class sceneController {
     @FXML private TextField IDNasabahTransfer; 
     @FXML private TextField NamaNasabahTransfer; 
     @FXML private TextField NominalTransfer; 
-
-
+    
     public void initialize() {
         try {
             con = DatabaseManager.getConnection();
@@ -59,7 +63,7 @@ public class sceneController {
             e.printStackTrace();
         }
     }
-    
+
     public void loadTotalSimpanan(int AnggotaID, ActionEvent event) {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("Simpanan.fxml"));
         try {
@@ -81,11 +85,12 @@ public class sceneController {
 
                 if (rs.next()) {
                     double totalSimpanan = rs.getDouble("Total_Simpanan");
-                    System.out.println("Total Simpanan Retrieved: " + totalSimpanan);
+                    DecimalFormat formatter = new DecimalFormat("#,###.00");
+                    String formattedSimpanan = formatter.format(totalSimpanan);
+
                     Platform.runLater(() -> {
                         if (controller.TotalSimpananAnggota != null) {
-                            controller.TotalSimpananAnggota.setText(String.format("%.2f", totalSimpanan));
-                            System.out.println("TotalSimpananAnggota Label updated in UI: " + totalSimpanan);
+                            controller.TotalSimpananAnggota.setText(formattedSimpanan);
                         } else {
                             System.out.println("TotalSimpananAnggota Label is null");
                         }
@@ -95,7 +100,6 @@ public class sceneController {
                     Platform.runLater(() -> {
                         if (controller.TotalSimpananAnggota != null) {
                             controller.TotalSimpananAnggota.setText("0.00");
-                            System.out.println("TotalSimpananAnggota Label reset to 0.00 in UI");
                         } else {
                             System.out.println("TotalSimpananAnggota Label is null");
                         }
@@ -106,18 +110,17 @@ public class sceneController {
             }
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             if (stage != null) {
-                scene = new Scene(root);
+                Scene scene = new Scene(root);
                 stage.setScene(scene);
                 stage.show();
             } else {
                 System.out.println("Stage is null!");
             }
-            
+
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
-
     @FXML
     private void transferAdmin(ActionEvent event) {
         String anggotaID = IDNasabahTransfer.getText();
@@ -334,11 +337,6 @@ public class sceneController {
     // Method untuk mengubah scene ke Transfer.fxml
     public void sceneTransfer(ActionEvent event) throws IOException {
         loadScene(event, "Transfer.fxml");
-    }
-
-    // Method untuk mengubah scene ke DetailTransaksi.fxml
-    public void sceneDetailTransaksi(ActionEvent event) throws IOException {
-        loadScene(event, "DetailTransaksi.fxml");
     }
 
     public void sceneVerifikasi(ActionEvent event) throws IOException {
