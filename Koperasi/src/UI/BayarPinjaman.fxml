@@ -94,7 +94,7 @@
             </ImageView>
          </graphic>
       </Button>
-      <Button layoutX="287.0" layoutY="636.0" mnemonicParsing="false" prefHeight="88.0" prefWidth="249.0" style="-fx-background-color: #45a834; -fx-background-radius: 70;" text="Bayar" textFill="WHITE">
+      <Button fx:id="Buttonbayar" layoutX="287.0" layoutY="636.0" mnemonicParsing="false" prefHeight="88.0" prefWidth="249.0" style="-fx-background-color: #45a834; -fx-background-radius: 70;" text="Bayar" textFill="WHITE">
          <font>
             <Font name="Eras Demi ITC" size="48.0" />
          </font>
@@ -104,17 +104,17 @@
             <Font name="Eras Demi ITC" size="48.0" />
          </font>
       </Button>
-      <Label alignment="CENTER" layoutX="296.0" layoutY="342.0" prefHeight="75.0" prefWidth="373.0" text="1000000">
+      <Label fx:id="TextPadaSimpanan" alignment="CENTER" layoutX="296.0" layoutY="342.0" prefHeight="75.0" prefWidth="373.0" text="0">
          <font>
             <Font name="Eras Demi ITC" size="48.0" />
          </font>
       </Label>
-      <Label alignment="CENTER" layoutX="773.0" layoutY="346.0" prefHeight="75.0" prefWidth="373.0" text="1000000">
+      <Label fx:id="TextTotalPinjaman" alignment="CENTER" layoutX="773.0" layoutY="346.0" prefHeight="75.0" prefWidth="373.0" text="0">
          <font>
             <Font name="Eras Demi ITC" size="48.0" />
          </font>
       </Label>
-      <TextField layoutX="291.0" layoutY="507.0" prefHeight="100.0" prefWidth="578.0" promptText="Isi Nominal Bayar">
+      <TextField fx:id="bayarField" layoutX="291.0" layoutY="507.0" prefHeight="100.0" prefWidth="578.0" promptText="Isi Nominal Bayar">
          <font>
             <Font size="36.0" />
          </font>

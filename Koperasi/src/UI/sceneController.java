@@ -5,6 +5,7 @@ import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.text.DecimalFormat;
 import java.sql.ResultSet;
 import KoneksiDatabase.DatabaseManager;
@@ -21,10 +22,13 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.scene.control.Label;
+import javafx.scene.control.Labeled;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextArea;
@@ -32,7 +36,8 @@ import javafx.scene.control.TextField;
 
 public class sceneController {
 
-    private Stage stage;
+    private static final Labeled TextTotalSimpanan = null;
+	private Stage stage;
     private Scene scene;
     private Parent root;
     private Connection con;
@@ -56,7 +61,10 @@ public class sceneController {
     @FXML private TextField NamaNasabahTransfer; 
     @FXML private TextField NominalTransfer; 
     @FXML private Label TextTotalPinjaman;
+    @FXML private Label TextPadaSimpanan;
     @FXML private TextField pinjamField;
+    @FXML private TextField bayarField;
+    @FXML private Button Buttonbayar;
     
     public void initialize() {
         try {
@@ -97,6 +105,117 @@ public class sceneController {
         }
     }
 
+    public void HitungPembayaran(ActionEvent event) {
+        try {
+            // Ambil Anggota_ID dari UserData singleton
+            int anggotaID = UserData.getInstance().getAnggotaID();
+            
+            // Ambil nilai pembayaran dari TextField
+            if (bayarField.getText().isEmpty()) {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Error");
+                alert.setHeaderText(null);
+                alert.setContentText("Nominal pembayaran tidak boleh kosong");
+                alert.showAndWait();
+                return;
+            }
+            
+            BigDecimal bayarNominal = new BigDecimal(bayarField.getText());
+            
+            // Koneksi ke database dan ambil Total_Pinjaman saat ini
+            Connection conn = DatabaseManager.getConnection();
+            String querySelect = "SELECT Total_Pinjaman FROM fact_transaksi_pinjaman WHERE Anggota_ID = ?";
+            PreparedStatement pstSelect = conn.prepareStatement(querySelect);
+            pstSelect.setInt(1, anggotaID);
+            ResultSet rs = pstSelect.executeQuery();
+            
+            if (rs.next()) {
+                BigDecimal currentLoan = rs.getBigDecimal("Total_Pinjaman");
+                
+                // Hitung sisa pinjaman
+                BigDecimal newLoanAmount = currentLoan.subtract(bayarNominal);
+                
+                // Update Total_Pinjaman di database
+                String queryUpdate = "UPDATE fact_transaksi_pinjaman SET Total_Pinjaman = ? WHERE Anggota_ID = ?";
+                PreparedStatement pstUpdate = conn.prepareStatement(queryUpdate);
+                pstUpdate.setBigDecimal(1, newLoanAmount);
+                pstUpdate.setInt(2, anggotaID);
+                pstUpdate.executeUpdate();
+                
+                // Update UserData singleton
+                UserData.getInstance().setTotalPinjaman(newLoanAmount);
+                
+                // Tampilkan pesan sukses
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Pembayaran Berhasil");
+                alert.setHeaderText(null);
+                alert.setContentText("Pembayaran berhasil!\nSisa pinjaman: Rp " + newLoanAmount);
+                alert.showAndWait();
+                
+                // Bersihkan field
+                bayarField.clear();
+                
+                // Tutup PreparedStatement
+                pstUpdate.close();
+            } else {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Error");
+                alert.setHeaderText(null);
+                alert.setContentText("Data pinjaman tidak ditemukan");
+                alert.showAndWait();
+            }
+            
+            // Tutup resources
+            rs.close();
+            pstSelect.close();
+            conn.close();
+            
+        } catch (NumberFormatException e) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error");
+            alert.setHeaderText(null);
+            alert.setContentText("Masukkan nominal pembayaran yang valid");
+            alert.showAndWait();
+        } catch (SQLException e) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error");
+            alert.setHeaderText(null);
+            alert.setContentText("Error database: " + e.getMessage());
+            alert.showAndWait();
+        }
+    }
+
+    
+    private void updateTotalSimpanan() {
+        UserData userData = UserData.getInstance();
+        int anggotaID = userData.getAnggotaID();
+
+        try (Connection con = DatabaseManager.getConnection()) {
+            String query = "SELECT COALESCE(SUM(Total_Simpan), 0) AS total FROM fact_simpanan WHERE Anggota_ID = ?";
+            PreparedStatement pst = con.prepareStatement(query);
+            pst.setInt(1, anggotaID);
+            ResultSet rs = pst.executeQuery();
+
+            if (rs.next()) {
+                BigDecimal totalSimpanan = rs.getBigDecimal("total");
+
+                // Simpan ke UserData
+                userData.setTotalSimpanan(totalSimpanan);
+
+                // Update Label di UI Thread
+                Platform.runLater(() -> TextPadaSimpanan.setText("" + totalSimpanan)); // Updated fx:id
+            } else {
+                // Jika tidak ada data, set nilai default di UserData
+                userData.setTotalSimpanan(BigDecimal.ZERO);
+                Platform.runLater(() -> TextPadaSimpanan.setText("0")); // Updated fx:id
+            }
+        } catch (SQLException e) {
+            System.err.println("Error fetching total saving amount: " + e.getMessage());
+            Platform.runLater(() -> TextPadaSimpanan.setText("Error")); // Updated fx:id
+        }
+    }
+
+
     @FXML
     private void handleButtonPinjam() {
         String nominal = pinjamField.getText();
@@ -129,7 +248,67 @@ public class sceneController {
             System.err.println("Error saving loan amount: " + e.getMessage());
         }
     }
+    
+    public void loadTotalDataSimpanan(int AnggotaID, ActionEvent event) {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("BayarPinjaman.fxml"));
+        try {
+            Parent root = loader.load();
+            sceneController controller = loader.getController();
 
+            if (controller == null) {
+                System.out.println("Controller is null");
+                return;
+            }
+
+            int anggotaID = UserData.getInstance().getAnggotaID();
+            String query = "SELECT Total_Simpanan FROM fact_simpanan WHERE Anggota_ID = ?";
+            System.out.println("Executing query for Anggota_ID: " + anggotaID);
+
+            try (PreparedStatement pst = con.prepareStatement(query)) {
+                pst.setInt(1, anggotaID);
+                ResultSet rs = pst.executeQuery();
+
+                if (rs.next()) {
+                    double totalSimpanan = rs.getDouble("Total_Simpanan");
+                    DecimalFormat formatter = new DecimalFormat("#,###.00");
+                    String formattedSimpanan = formatter.format(totalSimpanan);
+
+                    Platform.runLater(() -> {
+                        if (controller.TextPadaSimpanan != null) {
+                            controller.TextPadaSimpanan.setText(formattedSimpanan);
+                        } else {
+                            System.out.println("TextPadaSimpanan Label is null");
+                        }
+                    });
+                } else {
+                    System.out.println("No data found for Anggota_ID: " + anggotaID);
+                    Platform.runLater(() -> {
+                        if (controller.TextPadaSimpanan != null) {
+                            controller.TextPadaSimpanan.setText("0.00");
+                        } else {
+                            System.out.println("TextPadaSimpanan Label is null");
+                        }
+                    });
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            if (stage != null) {
+                Scene scene = new Scene(root);
+                stage.setScene(scene);
+                stage.show();
+            } else {
+                System.out.println("Stage is null!");
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    
+    
     public void loadTotalSimpanan(int AnggotaID, ActionEvent event) {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("Simpanan.fxml"));
         try {
@@ -187,6 +366,7 @@ public class sceneController {
             e.printStackTrace();
         }
     }
+    
     @FXML
     private void transferAdmin(ActionEvent event) {
         String anggotaID = IDNasabahTransfer.getText();
@@ -316,6 +496,25 @@ public class sceneController {
             System.out.println("Stage is null!");
         }
     }
+    
+    public void sceneBayarPinjaman(ActionEvent event) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("BayarPinjaman.fxml"));
+        Parent root = loader.load();
+        sceneController controller = loader.getController();
+        
+        int anggotaID = UserData.getInstance().getAnggotaID();
+        controller.loadTotalDataSimpanan(anggotaID, event);
+        
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        if (stage != null) {
+            Scene scene = new Scene(root);
+            stage.setScene(scene);
+            stage.show();
+        } else {
+            System.out.println("Stage is null!");
+        }
+    }
+
 
     // Method untuk mengubah scene ke profile admin dan meneruskan data admin
     public void sceneProfileAdmin(ActionEvent event) throws IOException {
@@ -383,12 +582,7 @@ public class sceneController {
             System.out.println("Stage is null!");
         }
     }
-
-
-    // Method untuk mengubah scene ke BayarPinjaman.fxml
-    public void sceneBayarPinjaman(ActionEvent event) throws IOException {
-        loadScene(event, "BayarPinjaman.fxml");
-    }
+    
 
     // Method untuk mengubah scene ke Pinjaman.fxml
     public void scenePinjaman(ActionEvent event) throws IOException {

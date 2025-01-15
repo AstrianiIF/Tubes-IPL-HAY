@@ -9,6 +9,7 @@ public class UserData {
     private String tanggalLahir;
     private int anggotaID;
     private BigDecimal totalPinjaman;
+	private BigDecimal totalSimpanan;
 
     private UserData() {
         // Private constructor to restrict instantiation
@@ -60,5 +61,10 @@ public class UserData {
     public void setTotalPinjaman(BigDecimal totalPinjaman) {
         this.totalPinjaman = totalPinjaman;
     }
+
+	public void setTotalSimpanan(BigDecimal totalSimpanan) {
+		this.totalSimpanan = totalSimpanan;
+		
+	}
 
 }
