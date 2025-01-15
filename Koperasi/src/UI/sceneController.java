@@ -8,6 +8,7 @@ import java.sql.ResultSet;
 import KoneksiDatabase.DatabaseManager;
 import Auth.AuthManager;
 import Model.UserData;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -39,6 +40,7 @@ public class sceneController {
     @FXML private Label ProfileNamaAdmin;
     @FXML private Label ProfileAlamatAdmin;
     @FXML private Label ProfileTanggalLahirAdmin;
+    @FXML private Label TotalSimpananAnggota; 
     @FXML private TextField namaField;
     @FXML private DatePicker tanggalLahirField;
     @FXML private TextArea alamatField;
@@ -58,6 +60,64 @@ public class sceneController {
         }
     }
     
+    public void loadTotalSimpanan(int AnggotaID, ActionEvent event) {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("Simpanan.fxml"));
+        try {
+            Parent root = loader.load();
+            sceneController controller = loader.getController();
+
+            if (controller == null) {
+                System.out.println("Controller is null");
+                return;
+            }
+
+            int anggotaID = UserData.getInstance().getAnggotaID();
+            String query = "SELECT Total_Simpanan FROM fact_simpanan WHERE Anggota_ID = ?";
+            System.out.println("Executing query for Anggota_ID: " + anggotaID);
+
+            try (PreparedStatement pst = con.prepareStatement(query)) {
+                pst.setInt(1, anggotaID);
+                ResultSet rs = pst.executeQuery();
+
+                if (rs.next()) {
+                    double totalSimpanan = rs.getDouble("Total_Simpanan");
+                    System.out.println("Total Simpanan Retrieved: " + totalSimpanan);
+                    Platform.runLater(() -> {
+                        if (controller.TotalSimpananAnggota != null) {
+                            controller.TotalSimpananAnggota.setText(String.format("%.2f", totalSimpanan));
+                            System.out.println("TotalSimpananAnggota Label updated in UI: " + totalSimpanan);
+                        } else {
+                            System.out.println("TotalSimpananAnggota Label is null");
+                        }
+                    });
+                } else {
+                    System.out.println("No data found for Anggota_ID: " + anggotaID);
+                    Platform.runLater(() -> {
+                        if (controller.TotalSimpananAnggota != null) {
+                            controller.TotalSimpananAnggota.setText("0.00");
+                            System.out.println("TotalSimpananAnggota Label reset to 0.00 in UI");
+                        } else {
+                            System.out.println("TotalSimpananAnggota Label is null");
+                        }
+                    });
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            if (stage != null) {
+                scene = new Scene(root);
+                stage.setScene(scene);
+                stage.show();
+            } else {
+                System.out.println("Stage is null!");
+            }
+            
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     @FXML
     private void transferAdmin(ActionEvent event) {
         String anggotaID = IDNasabahTransfer.getText();
@@ -154,6 +214,9 @@ public class sceneController {
                 userData.setNama(rs.getString("nama"));
                 userData.setAlamat(rs.getString("alamat"));
                 userData.setTanggalLahir(rs.getString("tanggal_lahir"));
+                int anggotaID = rs.getInt("Anggota_ID");
+                userData.setAnggotaID(anggotaID);
+                loadTotalSimpanan(anggotaID,event);
                 sceneProfile(event);
             } else {
                 System.out.println("Username atau password salah.");
@@ -175,10 +238,14 @@ public class sceneController {
         UserData userData = UserData.getInstance();
         profileController.setProfileData(userData.getNama(), userData.getAlamat(), userData.getTanggalLahir());
 
-        stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        scene = new Scene(root);
-        stage.setScene(scene);
-        stage.show();
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        if (stage != null) {
+            scene = new Scene(root);
+            stage.setScene(scene);
+            stage.show();
+        } else {
+            System.out.println("Stage is null!");
+        }
     }
 
     // Method untuk mengubah scene ke profile admin dan meneruskan data admin
@@ -193,10 +260,14 @@ public class sceneController {
         UserData userData = UserData.getInstance();
         profileAdminController.setProfileAdminData(userData.getNama(), userData.getAlamat(), userData.getTanggalLahir());
 
-        stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        scene = new Scene(root);
-        stage.setScene(scene);
-        stage.show();
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        if (stage != null) {
+            scene = new Scene(root);
+            stage.setScene(scene);
+            stage.show();
+        } else {
+            System.out.println("Stage is null!");
+        }
     }
 
     // Method untuk menyetel data profil anggota
@@ -224,6 +295,26 @@ public class sceneController {
         // Kembali ke halaman login
         sceneLogin(event);
     }
+    
+    @FXML
+    public void sceneSimpanan(ActionEvent event) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("Simpanan.fxml"));
+        Parent root = loader.load();
+        sceneController controller = loader.getController();
+
+        int anggotaID = UserData.getInstance().getAnggotaID();
+        controller.loadTotalSimpanan(anggotaID, event);
+
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        if (stage != null) {
+            scene = new Scene(root);
+            stage.setScene(scene);
+            stage.show();
+        } else {
+            System.out.println("Stage is null!");
+        }
+    }
+
 
     // Method untuk mengubah scene ke BayarPinjaman.fxml
     public void sceneBayarPinjaman(ActionEvent event) throws IOException {
@@ -238,11 +329,6 @@ public class sceneController {
     // Method untuk mengubah scene ke Transaksi.fxml
     public void sceneTransaksi(ActionEvent event) throws IOException {
         loadScene(event, "Transaksi.fxml");
-    }
-
-    // Method untuk mengubah scene ke Simpanan.fxml
-    public void sceneSimpanan(ActionEvent event) throws IOException {
-        loadScene(event, "Simpanan.fxml");
     }
 
     // Method untuk mengubah scene ke Transfer.fxml

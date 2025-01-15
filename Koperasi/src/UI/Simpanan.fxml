@@ -19,7 +19,7 @@
                   <Font name="Eras Demi ITC" size="48.0" />
                </font>
             </Label>
-            <Label fx:id="TotalSimpananAnggota" layoutX="61.0" layoutY="162.0" text="1.500.000">
+            <Label fx:id="TotalSimpananAnggota" layoutX="61.0" layoutY="162.0" text=" ">
                <font>
                   <Font name="Eras Demi ITC" size="64.0" />
                </font>

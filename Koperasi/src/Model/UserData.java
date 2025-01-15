@@ -5,6 +5,7 @@ public class UserData {
     private String nama;
     private String alamat;
     private String tanggalLahir;
+    private int anggotaID;
 
     private UserData() {
         // Private constructor to restrict instantiation
@@ -15,6 +16,14 @@ public class UserData {
             instance = new UserData();
         }
         return instance;
+    }
+    
+    public int getAnggotaID() {
+        return anggotaID;
+    }
+
+    public void setAnggotaID(int anggotaID) {
+        this.anggotaID = anggotaID;
     }
 
     public String getNama() {

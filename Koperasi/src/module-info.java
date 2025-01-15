@@ -3,6 +3,7 @@ module Koperasi {
 	requires javafx.fxml;
 	requires javafx.base;
 	requires java.sql;
+	requires javafx.graphics;
 	exports UI to javafx.fxml;
 	
 	opens UI to javafx.fxml;
