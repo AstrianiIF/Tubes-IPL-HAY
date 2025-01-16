@@ -607,9 +607,9 @@ public class sceneController {
         loadScene(event, "Transfer.fxml");
     }
 
-//    public void sceneVerifikasi(ActionEvent event) throws IOException {
-//        loadScene(event, "VerifikasiPinjam.fxml");
-//    }
+    public void sceneVerifikasi(ActionEvent event) throws IOException {
+        loadScene(event, "VerifikasiPinjam.fxml");
+    }
 
     public void sceneRegister(ActionEvent event) throws IOException {
         loadScene(event, "Register.fxml");
